@@ -3,11 +3,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion, useInView } from "framer-motion";
-import { useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState } from "react";
 import CountUp from "react-countup";
-import Particles from "@tsparticles/react";
+import Particles, { initParticlesEngine } from "@tsparticles/react";
 import { loadSlim } from "@tsparticles/slim";
-import type { Engine } from "@tsparticles/engine";
+import type { ISourceOptions } from "@tsparticles/engine";
 
 // ─── Paleta ───────────────────────────────────────────────────────────────────
 // Background geral:   fundo de vídeo com overlays verdes
@@ -74,7 +74,7 @@ function AnimatedStat({
 }
 
 // ─── Particles ────────────────────────────────────────────────────────────────
-const particlesOptions = {
+const particlesOptions: ISourceOptions = {
   fullScreen: { enable: false },
   fpsLimit: 60,
   interactivity: {
@@ -98,13 +98,17 @@ const particlesOptions = {
     links: { enable: true, distance: 110, color: "#A8E6A1", opacity: 0.10, width: 1 },
   },
   detectRetina: true,
-} as const;
+};
 
 // ─── Hero ─────────────────────────────────────────────────────────────────────
 export function Hero() {
   const [videoLoaded, setVideoLoaded] = useState(false);
-  const particlesInit = useCallback(async (engine: Engine) => {
-    await loadSlim(engine);
+  const [particlesReady, setParticlesReady] = useState(false);
+
+  useEffect(() => {
+    initParticlesEngine(async (engine) => {
+      await loadSlim(engine);
+    }).then(() => setParticlesReady(true));
   }, []);
 
   return (
@@ -140,12 +144,13 @@ export function Hero() {
 
       {/* ══ PARTICLES ══════════════════════════════════════════════════ */}
       <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 2 }}>
-        <Particles
-          id="hero-particles"
-          init={particlesInit}
-          options={particlesOptions as any}
-          className="absolute inset-0 w-full h-full"
-        />
+        {particlesReady ? (
+          <Particles
+            id="hero-particles"
+            options={particlesOptions}
+            className="absolute inset-0 w-full h-full"
+          />
+        ) : null}
       </div>
 
       {/* ══ CONTEÚDO PRINCIPAL ════════════════════════════════════════ */}
