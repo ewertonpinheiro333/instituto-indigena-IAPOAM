@@ -8,17 +8,17 @@ import { Programas } from "@/app/components/Programas";
 import AreasDeAtuacao from "@/app/components/AreasDeAtuacao";
 import DonationCTA from "@/app/components/DonationCTA";
 import { Footer } from "@/app/components/Footer";
-import { NossaLuta } from "./components/NossaLuta";
-import { EstruturaIapoam } from "./components/EstruturaIapoam";
+import { NossaLuta } from "@/app/components/NossaLuta";
+import { EstruturaIapoam } from "@/app/components/EstruturaIapoam";
 import { Direitos } from "@/app/components/Direitos";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-[#010D00]">
+    <div className="min-h-screen bg-[#13181b]">
       <Header />
       <main>
         <Hero />
-        <NossaLuta />  
+        <NossaLuta />
         <InstitutionalBanner />
         <ProjetosAcoes />
         <EstruturaIapoam />

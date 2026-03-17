@@ -2,7 +2,20 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { motion, useInView } from "framer-motion";
+import { useRef } from "react";
 
+// ─── Paleta (mesmo design system do Hero) ─────────────────────────────────────
+// Background seção:   #1a3d20  (verde floresta escuro — continuação do wave do Hero)
+// Cards / surfaces:   rgba(27,94,32,…) = #1B5E20
+// Destaque texto:     #4FDE1B  (verde vivo) / #A8E6A1 (verde claro suave)
+// Números / glow:     #F4C430  (amarelo-ouro)
+// Botão primário:     #C1440E → hover #F4C430
+// Texto corpo:        rgba(240,255,240, …)  branco-esverdeado
+// Linha topo neon:    #4FDE1B
+// ─────────────────────────────────────────────────────────────────────────────
+
+// ─── Data ─────────────────────────────────────────────────────────────────────
 const servicos = [
   {
     numero: "01",
@@ -36,212 +49,557 @@ const servicos = [
   },
 ];
 
+const statsManifesto = [
+  { valor: "71.713", legenda: "Indígenas em Manaus" },
+  { valor: "3,48%",  legenda: "Da população total"  },
+  { valor: "100%",   legenda: "Aldeias por assentamento" },
+];
+
+// ─── FadeIn helper ─────────────────────────────────────────────────────────────
+function FadeIn({
+  children,
+  delay = 0,
+  className = "",
+}: {
+  children: React.ReactNode;
+  delay?: number;
+  className?: string;
+}) {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: "-60px" });
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 28 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.75, delay, ease: [0.22, 1, 0.36, 1] }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+// ─── Component ────────────────────────────────────────────────────────────────
 export function NossaLuta() {
   return (
-    <section className="py-20 bg-[#010D00] relative overflow-hidden">
+    <section
+      className="relative overflow-hidden"
+      style={{
+        background: "#1a3d20",   // continua direto do wave final do Hero
+        paddingTop: "7rem",
+        paddingBottom: "8rem",
+      }}
+    >
 
-      {/* Background glows */}
-      <div className="absolute inset-0 pointer-events-none opacity-10">
-        <div className="absolute top-1/4 right-0 w-96 h-96 bg-[#548C1C] rounded-full blur-[100px]" />
-        <div className="absolute bottom-1/4 left-0 w-96 h-96 bg-[#2E590E] rounded-full blur-[100px]" />
-      </div>
+      {/* ══ CAMADAS DE ATMOSFERA ══════════════════════════════════════ */}
 
+      {/* Gradiente direcional — profundidade vertical */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "linear-gradient(170deg, rgba(10,30,14,0.60) 0%, transparent 45%, rgba(8,24,11,0.45) 100%)",
+        }}
+      />
+
+      {/* Luz de dossel — verde vivo no centro-topo */}
+      <div
+        className="absolute pointer-events-none"
+        style={{
+          top: "-100px",
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: "860px",
+          height: "560px",
+          background:
+            "radial-gradient(ellipse 65% 50% at 50% 20%, rgba(79,222,27,0.11) 0%, transparent 65%)",
+          borderRadius: "50%",
+        }}
+      />
+
+      {/* Blob lateral direito — ouro suave */}
+      <div
+        className="absolute pointer-events-none"
+        style={{
+          top: "25%",
+          right: "-180px",
+          width: "480px",
+          height: "480px",
+          background: "radial-gradient(circle, rgba(244,196,48,0.07) 0%, transparent 65%)",
+          borderRadius: "50%",
+        }}
+      />
+
+      {/* Âncora escura na base */}
+      <div
+        className="absolute bottom-0 left-0 right-0 pointer-events-none"
+        style={{
+          height: "220px",
+          background: "linear-gradient(to top, rgba(8,22,10,0.65) 0%, transparent 100%)",
+        }}
+      />
+
+      {/* Dot-pattern */}
+      <svg
+        className="absolute inset-0 w-full h-full pointer-events-none"
+        xmlns="http://www.w3.org/2000/svg"
+        style={{ opacity: 0.03 }}
+        aria-hidden="true"
+      >
+        <defs>
+          <pattern
+            id="dots-luta"
+            x="0" y="0" width="28" height="28"
+            patternUnits="userSpaceOnUse"
+          >
+            <circle cx="2" cy="2" r="1.2" fill="#f0ffe8" />
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#dots-luta)" />
+      </svg>
+
+      {/* Linha de entrada no topo — verde vivo */}
+      <div
+        className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+        style={{
+          background:
+            "linear-gradient(to right, transparent, rgba(79,222,27,0.20) 30%, rgba(79,222,27,0.48) 50%, rgba(79,222,27,0.20) 70%, transparent)",
+        }}
+      />
+
+      {/* ══ CONTEÚDO ══════════════════════════════════════════════════ */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
-        {/* ── Header ── */}
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#0C2605]/80 border border-[#2E590E]/50 rounded-full mb-5">
-            <div className="w-2 h-2 bg-[#8EBF24] rounded-full animate-pulse" />
-            <span className="text-sm font-semibold text-[#8EBF24] tracking-wide">
+        {/* ── CABEÇALHO ───────────────────────────────────────────────── */}
+        <FadeIn className="text-center mb-16">
+
+          {/* Badge */}
+          <div
+            className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full mb-7"
+            style={{
+              background: "rgba(27,94,32,0.55)",          // #1B5E20 translúcido
+              border: "1px solid rgba(255,255,255,0.20)",
+              backdropFilter: "blur(8px)",
+              WebkitBackdropFilter: "blur(8px)",
+            }}
+          >
+            <span
+              className="w-1.5 h-1.5 rounded-full animate-pulse flex-shrink-0"
+              style={{ background: "#4FDE1B", boxShadow: "0 0 7px rgba(79,222,27,0.80)" }}
+            />
+            <span
+              className="font-bold uppercase"
+              style={{ fontSize: "11px", letterSpacing: "0.22em", color: "rgba(168,230,161,0.90)" }}
+            >
               Nossa Luta
             </span>
           </div>
 
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-4 leading-tight tracking-tight">
+          {/* Título h2 */}
+          <h2
+            className="font-bold leading-tight mb-5"
+            style={{
+              fontSize: "clamp(2.2rem, 5.5vw, 3.75rem)",
+              letterSpacing: "-0.025em",
+              color: "#ffffff",
+              textShadow: "0 2px 20px rgba(8,28,12,0.55)",
+            }}
+          >
             Visibilidade e{" "}
-            <span className="text-[#8EBF24]">Respeito</span>
+            <span
+              style={{
+                backgroundImage: "linear-gradient(88deg, #4FDE1B 0%, #A8E6A1 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+                filter: "drop-shadow(0 0 14px rgba(79,222,27,0.28))",
+              }}
+            >
+              Respeito
+            </span>
           </h2>
 
-          <p className="text-white/55 max-w-2xl mx-auto text-base leading-relaxed">
+          {/* Linha decorativa */}
+          <div className="flex justify-center mb-5">
+            <div
+              className="h-0.5 w-16 rounded-full"
+              style={{ background: "linear-gradient(90deg, #4FDE1B, #A8E6A1)" }}
+            />
+          </div>
+
+          <p
+            className="max-w-xl mx-auto text-base leading-relaxed"
+            style={{ color: "rgba(240,255,240,0.70)" }}
+          >
             A realidade dos povos originários que chegam às cidades em busca de dignidade —
             e a luta do IAPOAM para garantir que seus direitos sejam respeitados.
           </p>
-        </div>
+        </FadeIn>
 
-        {/* ══════════════════════════════════════════════════
-            MANIFESTO BLOCK — texto + imagem dados.png
-        ══════════════════════════════════════════════════ */}
-        <div className="relative bg-gradient-to-br from-[#0C2605] to-[#1a3a08] border border-[#548C1C]/35 rounded-3xl overflow-hidden mb-16">
+        {/* ── CARD MANIFESTO ───────────────────────────────────────────── */}
+        <FadeIn delay={0.1}>
+          <div
+            className="relative rounded-3xl overflow-hidden mb-16"
+            style={{
+              background: "rgba(27,94,32,0.45)",          // #1B5E20 com alpha
+              border: "1px solid rgba(255,255,255,0.12)",
+              backdropFilter: "blur(10px)",
+              WebkitBackdropFilter: "blur(10px)",
+              boxShadow: "0 4px 40px rgba(8,22,10,0.40), inset 0 1px 0 rgba(79,222,27,0.06)",
+            }}
+          >
+            {/* Linha superior — verde vivo */}
+            <div
+              className="absolute top-0 left-0 right-0"
+              style={{
+                height: "2px",
+                background:
+                  "linear-gradient(90deg, #4FDE1B 0%, #A8E6A1 50%, transparent 100%)",
+                opacity: 0.65,
+              }}
+            />
 
-          {/* Decorative top accent */}
-          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#8EBF24] to-[#548C1C]" />
-          {/* Glow decorations */}
-          <div className="absolute top-0 right-0 w-80 h-80 bg-[#8EBF24]/06 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute bottom-0 left-0 w-60 h-60 bg-[#2E590E]/20 rounded-full blur-3xl pointer-events-none" />
-          {/* Large quote mark decoration */}
-          <div className="absolute -top-2 left-7 text-[140px] leading-none text-white/03 font-serif select-none pointer-events-none">
-            "
-          </div>
+            <div className="grid lg:grid-cols-2 gap-0">
 
-          <div className="relative z-10 grid lg:grid-cols-2 gap-0">
+              {/* Coluna esquerda — texto + stats */}
+              <div className="p-8 lg:p-12 flex flex-col justify-between">
+                <div className="space-y-5">
 
-            {/* Left: manifesto text */}
-            <div className="p-8 lg:p-10 flex flex-col justify-between">
-              <div className="space-y-5">
-                <p className="text-white/85 text-base leading-relaxed">
-                  O <span className="font-bold text-white">IAPOAM</span> luta pela inclusão,
-                  visibilidade e respeito aos povos indígenas que buscam as grandes cidades
-                  em busca de formação — fundamental, média, superior — ou de tratamento
-                  médico. Apenas <span className="text-[#8EBF24] font-bold">10%</span> retornam às suas bases. Os demais
-                  permanecem na capital, sem moradia digna, sem apoio do poder público.
-                </p>
+                  <p className="text-base leading-relaxed" style={{ color: "rgba(240,255,240,0.85)" }}>
+                    O{" "}
+                    <strong style={{ color: "#ffffff", fontWeight: 700 }}>IAPOAM</strong>{" "}
+                    luta pela inclusão, visibilidade e respeito aos povos indígenas que
+                    buscam as grandes cidades. Apenas{" "}
+                    <span
+                      style={{
+                        color: "#F4C430",                 // amarelo-ouro como destaque numérico
+                        fontWeight: 700,
+                        textShadow: "0 0 10px rgba(244,196,48,0.32)",
+                      }}
+                    >
+                      10%
+                    </span>{" "}
+                    retornam às suas bases. Os demais permanecem na capital, sem moradia
+                    digna, sem apoio do poder público.
+                  </p>
 
-                <p className="text-white/70 text-base leading-relaxed">
-                  100% das comunidades e aldeias urbanas foram criadas através de
-                  assentamentos e invasões. Prefeitura e Governo Estadual não buscam
-                  inclusão nem moradia digna para os povos indígenas.
-                </p>
+                  <p className="text-base leading-relaxed" style={{ color: "rgba(240,255,240,0.68)" }}>
+                    100% das comunidades e aldeias urbanas foram criadas através de
+                    assentamentos e invasões. Prefeitura e Governo Estadual não buscam
+                    inclusão nem moradia digna para os povos indígenas.
+                  </p>
 
-                {/* Quote highlight */}
-                <div className="border-l-4 border-[#8EBF24]/60 pl-4 py-1">
-                  <p className="text-white/80 text-sm italic leading-relaxed">
-                    "Quem não tem casa não tem saúde, não tem educação.
-                    Quem não tem casa não tem direito de ser feliz."
+                  {/* Citação — borda verde vivo */}
+                  <div
+                    className="pl-5 py-1"
+                    style={{ borderLeft: "2px solid rgba(79,222,27,0.50)" }}
+                  >
+                    <p
+                      className="text-sm italic leading-relaxed"
+                      style={{ color: "rgba(240,255,240,0.74)" }}
+                    >
+                      "Quem não tem casa não tem saúde, não tem educação.
+                      Quem não tem casa não tem direito de ser feliz."
+                    </p>
+                  </div>
+
+                  {/* Frase de reforço — verde vivo */}
+                  <p
+                    className="text-sm font-semibold leading-snug"
+                    style={{ color: "#4FDE1B" }}
+                  >
+                    O IAPOAM irá lutar sempre pela qualidade de vida melhor
+                    para a nação indígena do Amazonas.
                   </p>
                 </div>
 
-                <p className="text-[#8EBF24] font-bold text-sm tracking-wide">
-                  O IAPOAM irá lutar sempre pela qualidade de vida melhor
-                  para a nação indígena do Amazonas.
-                </p>
+                {/* Mini stats — números em amarelo-ouro */}
+                <div className="grid grid-cols-3 gap-3 mt-8">
+                  {statsManifesto.map((s, i) => (
+                    <div
+                      key={i}
+                      className="rounded-xl p-3 text-center"
+                      style={{
+                        background: "rgba(27,94,32,0.55)",
+                        border: "1px solid rgba(255,255,255,0.14)",
+                      }}
+                    >
+                      <div
+                        className="font-black leading-tight"
+                        style={{
+                          fontSize: "clamp(1rem, 2.5vw, 1.2rem)",
+                          color: "#F4C430",               // amarelo-ouro
+                          textShadow: "0 0 14px rgba(244,196,48,0.30)",
+                          letterSpacing: "-0.02em",
+                        }}
+                      >
+                        {s.valor}
+                      </div>
+                      <div
+                        className="mt-0.5 leading-tight font-medium"
+                        style={{ fontSize: "10px", color: "rgba(240,255,240,0.52)" }}
+                      >
+                        {s.legenda}
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
 
-              {/* Mini stats */}
-              <div className="grid grid-cols-3 gap-3 mt-8">
-                {[
-                  { valor: "71.713", legenda: "Indígenas em Manaus" },
-                  { valor: "3,48%", legenda: "Da população total" },
-                  { valor: "100%", legenda: "Aldeias por assentamento" },
-                ].map((s, i) => (
-                  <div
-                    key={i}
-                    className="bg-[#010D00]/50 border border-[#2E590E]/40 rounded-xl p-3 text-center"
-                  >
-                    <div className="text-lg font-black text-[#8EBF24] leading-tight">
-                      {s.valor}
-                    </div>
-                    <div className="text-[10px] text-white/45 mt-0.5 leading-tight font-medium">
-                      {s.legenda}
-                    </div>
+              {/* Coluna direita — mapa IBGE */}
+              <div
+                className="relative"
+                style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}
+              >
+                {/* Divisor vertical lg */}
+                <div
+                  className="hidden lg:block absolute left-0 top-0 bottom-0 w-px"
+                  style={{
+                    background:
+                      "linear-gradient(to bottom, transparent, rgba(79,222,27,0.18) 30%, rgba(79,222,27,0.18) 70%, transparent)",
+                  }}
+                />
+
+                <div className="p-6 lg:p-10 h-full flex flex-col">
+                  {/* Divisor "Dados — IBGE" */}
+                  <div className="flex items-center gap-3 mb-5">
+                    <div
+                      className="flex-1 h-px"
+                      style={{ background: "rgba(79,222,27,0.18)" }}
+                    />
+                    <span
+                      className="font-bold uppercase whitespace-nowrap"
+                      style={{
+                        fontSize: "10px",
+                        letterSpacing: "0.22em",
+                        color: "rgba(168,230,161,0.55)",
+                      }}
+                    >
+                      Dados — IBGE
+                    </span>
+                    <div
+                      className="flex-1 h-px"
+                      style={{ background: "rgba(79,222,27,0.18)" }}
+                    />
                   </div>
-                ))}
-              </div>
-            </div>
 
-            {/* Right: dados.png image */}
-            <div className="relative lg:border-l border-[#548C1C]/20">
-              {/* On mobile, add top border */}
-              <div className="lg:hidden absolute top-0 left-8 right-8 h-px bg-[#548C1C]/25" />
+                  {/* Frame da imagem */}
+                  <div
+                    className="relative flex-1 min-h-[280px] rounded-2xl overflow-hidden"
+                    style={{
+                      background: "#e9ebea",
+                      border: "1px solid rgba(79,222,27,0.22)",
+                      boxShadow: "0 2px 20px rgba(8,22,10,0.40)",
+                    }}
+                  >
+                    <Image
+                      src="/dados.png"
+                      alt="Mapa — População indígena por cidade — Fonte: IBGE / G1"
+                      fill
+                      className="object-contain object-center"
+                      sizes="(max-width: 1024px) 100vw, 50vw"
+                    />
+                  </div>
 
-              <div className="p-6 lg:p-8 h-full flex flex-col">
-                {/* Label */}
-                <div className="flex items-center gap-2 mb-4">
-                  <div className="h-px flex-1 bg-[#2E590E]/40" />
-                  <span className="text-[10px] font-bold text-[#8EBF24]/60 uppercase tracking-[0.18em]">
-                    Dados — IBGE
-                  </span>
-                  <div className="h-px flex-1 bg-[#2E590E]/40" />
+                  <p
+                    className="text-right mt-2.5 font-medium"
+                    style={{ fontSize: "10px", color: "rgba(240,255,240,0.30)" }}
+                  >
+                    Fonte: IBGE / G1 — Manaus-AM · 71.713 indígenas · 3,48%
+                  </p>
                 </div>
-
-                {/* Image card */}
-                <div className="relative flex-1 min-h-[280px] rounded-2xl overflow-hidden border border-[#548C1C]/30 shadow-xl shadow-[#010D00]/40 bg-white">
-                  <Image
-                    src="/dados.png"
-                    alt="Mapa — População indígena por cidade — Fonte: IBGE / G1"
-                    fill
-                    className="object-contain object-center"
-                    sizes="(max-width: 1024px) 100vw, 50vw"
-                  />
-                </div>
-
-                {/* Source caption */}
-                <p className="text-[10px] text-white/30 text-right mt-2.5 font-medium">
-                  Fonte: IBGE / G1 — Manaus-AM · 71.713 indígenas · 3,48%
-                </p>
               </div>
             </div>
           </div>
-        </div>
+        </FadeIn>
 
-        {/* ══════════════════════════════════════════════════
-            O QUE FAZEMOS
-        ══════════════════════════════════════════════════ */}
-        <div className="grid lg:grid-cols-2 gap-8">
+        {/* ── GRID SERVIÇOS ────────────────────────────────────────────── */}
+        <div className="grid lg:grid-cols-2 gap-12 items-start">
 
-          {/* Left: heading + intro + CTA */}
-          <div className="flex flex-col justify-center">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#010D00]/80 border border-[#2E590E]/50 rounded-full mb-5 w-fit">
-              <span className="text-sm font-medium text-[#8EBF24]">Serviços</span>
-            </div>
-            <h3 className="text-3xl md:text-4xl font-bold text-white mb-5 leading-tight tracking-tight">
-              O Que Fazemos
-            </h3>
-            <p className="text-white/65 text-base leading-relaxed mb-8">
-              Cinco frentes de atuação direta para garantir que nenhum indígena
-              que chega à cidade fique desamparado — sem orientação, sem direitos
-              e sem voz.
+          {/* Coluna esquerda — texto editorial + CTA */}
+          <FadeIn delay={0.15} className="flex flex-col justify-center">
+
+            <p
+              className="font-bold uppercase mb-3"
+              style={{
+                fontSize: "10px",
+                letterSpacing: "0.22em",
+                color: "rgba(168,230,161,0.65)",          // #A8E6A1 suave
+              }}
+            >
+              Serviços
             </p>
+
+            <h3
+              className="font-semibold leading-tight mb-5"
+              style={{
+                fontSize: "clamp(1.6rem, 3.5vw, 2.4rem)",
+                letterSpacing: "-0.02em",
+                color: "#ffffff",
+              }}
+            >
+              O Que{" "}
+              <span
+                style={{
+                  backgroundImage: "linear-gradient(88deg, #4FDE1B 0%, #A8E6A1 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                }}
+              >
+                Fazemos
+              </span>
+            </h3>
+
+            {/* Linha decorativa */}
+            <div
+              className="w-10 mb-5 rounded-full"
+              style={{
+                height: "2px",
+                background: "linear-gradient(90deg, #4FDE1B, #A8E6A1)",
+              }}
+            />
+
+            <p
+              className="text-base leading-relaxed mb-8"
+              style={{ color: "rgba(240,255,240,0.70)", lineHeight: "1.75" }}
+            >
+              Cinco frentes de atuação direta para garantir que nenhum indígena que
+              chega à cidade fique desamparado — sem orientação, sem direitos e sem voz.
+            </p>
+
+            {/*
+             * CTA — laranja-terra #C1440E
+             * Hover: amarelo-ouro #F4C430 + texto escuro #1A1A1A
+             */}
             <Link
               href="/doacoes"
-              className="group inline-flex items-center gap-3 px-7 py-4 bg-gradient-to-r from-[#2E590E] to-[#548C1C] text-white font-bold rounded-xl hover:shadow-xl hover:shadow-[#548C1C]/25 hover:scale-105 active:scale-100 transition-all duration-300 w-fit text-sm"
+              className="group inline-flex items-center gap-2.5 rounded-xl font-bold
+                         tracking-wide transition-all duration-300 w-fit"
+              style={{
+                padding: "14px 28px",
+                fontSize: "0.875rem",
+                letterSpacing: "0.02em",
+                background: "linear-gradient(135deg, #C1440E 0%, #d94f16 100%)",
+                color: "#ffffff",
+                boxShadow: "0 4px 20px rgba(193,68,14,0.40)",
+              }}
+              onMouseEnter={(e) => {
+                const el = e.currentTarget as HTMLElement;
+                el.style.transform = "translateY(-2px) scale(1.02)";
+                el.style.background = "linear-gradient(135deg, #F4C430 0%, #f7d55a 100%)";
+                el.style.color = "#1A1A1A";
+                el.style.boxShadow = "0 8px 28px rgba(244,196,48,0.50)";
+              }}
+              onMouseLeave={(e) => {
+                const el = e.currentTarget as HTMLElement;
+                el.style.transform = "translateY(0) scale(1)";
+                el.style.background = "linear-gradient(135deg, #C1440E 0%, #d94f16 100%)";
+                el.style.color = "#ffffff";
+                el.style.boxShadow = "0 4px 20px rgba(193,68,14,0.40)";
+              }}
             >
               Apoie Nossa Causa
               <svg
-                className="w-4 h-4 group-hover:translate-x-1 transition-transform"
+                className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300"
                 fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}
+                aria-hidden="true"
               >
                 <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
             </Link>
-          </div>
+          </FadeIn>
 
-          {/* Right: services list */}
-          <div className="bg-[#010D00]/60 border border-[#2E590E]/40 rounded-3xl p-7 space-y-3">
-            {servicos.map((s) => (
-              <div
-                key={s.numero}
-                className="group flex items-start gap-4 p-4 bg-[#0C2605]/60 border border-[#2E590E]/30 rounded-xl hover:border-[#548C1C]/50 hover:bg-[#0C2605]/80 transition-all duration-300"
-              >
-                {/* Number badge */}
-                <div className="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-[#2E590E] to-[#548C1C] rounded-lg flex items-center justify-center">
-                  <span className="text-[10px] font-black text-white">{s.numero}</span>
-                </div>
+          {/* Coluna direita — lista de serviços */}
+          <FadeIn delay={0.2}>
+            <div className="space-y-2.5">
+              {servicos.map((s, i) => (
+                <motion.div
+                  key={s.numero}
+                  initial={{ opacity: 0, x: 20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true, margin: "-40px" }}
+                  transition={{ duration: 0.55, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] }}
+                  className="group flex items-start gap-4 p-4 rounded-xl transition-all duration-300 cursor-default"
+                  style={{
+                    background: "rgba(27,94,32,0.40)",
+                    border: "1px solid rgba(255,255,255,0.08)",
+                  }}
+                  onMouseEnter={(e) => {
+                    const el = e.currentTarget as HTMLElement;
+                    el.style.background = "rgba(27,94,32,0.65)";
+                    el.style.borderColor = "rgba(79,222,27,0.28)";
+                    el.style.transform = "translateX(4px)";
+                  }}
+                  onMouseLeave={(e) => {
+                    const el = e.currentTarget as HTMLElement;
+                    el.style.background = "rgba(27,94,32,0.40)";
+                    el.style.borderColor = "rgba(255,255,255,0.08)";
+                    el.style.transform = "translateX(0)";
+                  }}
+                >
+                  {/* Badge numérico — verde vivo */}
+                  <div
+                    className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center"
+                    style={{
+                      background: "rgba(79,222,27,0.14)",
+                      border: "1px solid rgba(79,222,27,0.30)",
+                    }}
+                  >
+                    <span
+                      className="font-black"
+                      style={{ fontSize: "10px", color: "#4FDE1B" }}
+                    >
+                      {s.numero}
+                    </span>
+                  </div>
 
-                <div className="flex-1 min-w-0">
-                  <h4 className="text-sm font-bold text-white mb-1.5 leading-snug group-hover:text-[#8EBF24] transition-colors duration-300">
-                    {s.titulo}
-                  </h4>
-                  <p className="text-xs text-white/55 leading-relaxed">
-                    {s.descricao}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
+                  <div className="flex-1 min-w-0">
+                    <h4
+                      className="font-semibold mb-1.5 leading-snug"
+                      style={{ fontSize: "0.875rem", color: "#ffffff" }}
+                    >
+                      {s.titulo}
+                    </h4>
+                    <p
+                      className="leading-relaxed"
+                      style={{
+                        fontSize: "0.8125rem",
+                        color: "rgba(240,255,240,0.70)",
+                        lineHeight: "1.65",
+                      }}
+                    >
+                      {s.descricao}
+                    </p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </FadeIn>
         </div>
+      </div>
 
-        {/* Dots decoration */}
-        <div className="flex justify-center gap-2 mt-12">
-          {[0, 1, 2].map((i) => (
-            <div
-              key={i}
-              className={`rounded-full ${
-                i === 1 ? "w-8 h-2.5 bg-[#8EBF24]" : "w-2.5 h-2.5 bg-[#2E590E]/60"
-              }`}
-            />
-          ))}
-        </div>
-
+      {/* ══ WAVE DE SAÍDA ════════════════════════════════════════════ */}
+      <div className="absolute bottom-0 left-0 right-0 pointer-events-none">
+        <svg
+          viewBox="0 0 1440 72"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className="w-full"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          <path
+            d="M0 72 L0 28 C180 6 420 60 720 36 C1020 12 1260 58 1440 28 L1440 72 Z"
+            fill="rgba(8,22,10,0.32)"
+            transform="translate(0,3)"
+          />
+          <path
+            d="M0 72 L0 28 C180 6 420 60 720 36 C1020 12 1260 58 1440 28 L1440 72 Z"
+            fill="#0f2912"
+          />
+        </svg>
       </div>
     </section>
   );
