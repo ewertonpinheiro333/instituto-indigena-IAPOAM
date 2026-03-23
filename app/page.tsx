@@ -12,19 +12,22 @@ import { NossaLuta } from "@/app/components/NossaLuta";
 import { EstruturaIapoam } from "@/app/components/EstruturaIapoam";
 import { Direitos } from "@/app/components/Direitos";
 
+
 export default function Home() {
   return (
     <div className="min-h-screen bg-[#13181b]">
       <Header />
       <main>
         <Hero />
+        <Programas />
+       
         <NossaLuta />
         <InstitutionalBanner />
         <ProjetosAcoes />
         <EstruturaIapoam />
         <Presidente />
         <Equipe />
-        <Programas />
+        
         <Direitos />
         <AreasDeAtuacao />
         <DonationCTA />
